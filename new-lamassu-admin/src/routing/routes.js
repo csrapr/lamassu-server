@@ -3,6 +3,8 @@ import React from 'react'
 import { Route, Redirect, Switch } from 'react-router-dom'
 
 import AuthRegister from 'src/pages/AuthRegister'
+// import should appear before cashout (why?)
+import Blacklist from 'src/pages/Blacklist'
 import Cashout from 'src/pages/Cashout'
 import Commissions from 'src/pages/Commissions'
 import { Customers, CustomerProfile } from 'src/pages/Customers'
@@ -140,6 +142,13 @@ const tree = [
         route: '/compliance/customers',
         component: Customers
       },
+      {
+        key: 'blacklist',
+        label: 'Blacklist',
+        route: '/compliance/blacklist',
+        component: Blacklist
+      },
+      // what is this last one for
       {
         key: 'customer',
         route: '/compliance/customer/:id',
