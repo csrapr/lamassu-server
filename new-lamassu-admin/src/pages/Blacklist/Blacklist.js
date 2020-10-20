@@ -1,37 +1,73 @@
-import React from 'react'
+import { useQuery } from '@apollo/react-hooks'
+import Grid from '@material-ui/core/Grid'
+import { makeStyles } from '@material-ui/core/styles'
+import gql from 'graphql-tag'
+import * as R from 'ramda'
+import React, { useState, useEffect } from 'react'
 
-import DataTable from 'src/components/tables/DataTable'
+import Sidebar from 'src/components/layout/Sidebar'
+import TitleSection from 'src/components/layout/TitleSection'
+
+import styles from './Blacklist.styles'
+import BlacklistTable from './BlacklistTable'
 // import { useHistory } from 'react-router-dom'
 
-const Blacklist = () => {
-  // const history = useHistory()
+const useStyles = makeStyles(styles)
 
-  const elements = [
-    {
-      header: 'Cryptocode',
-      width: 180,
-      textAlign: 'center',
-      size: 'sm'
-    },
-    {
-      header: 'Address',
-      width: 380,
-      textAlign: 'center',
-      size: 'sm'
-    },
-    {
-      header: 'Created by Operator',
-      width: 180,
-      textAlign: 'center',
-      size: 'sm'
+const GET_BLACKLIST = gql`
+  {
+    blacklist {
+      createdByOperator
+      cryptoCode
+      address
     }
-  ]
+    cryptoCurrencies {
+      code
+    }
+  }
+`
+
+const Blacklist = () => {
+  const { data: blacklistResponse } = useQuery(GET_BLACKLIST)
+  const classes = useStyles()
+  const blacklistData = R.path(['blacklist'])(blacklistResponse) ?? []
+
+  const groupByCode = R.groupBy(obj => obj.cryptoCode)
+  const formattedData = groupByCode(blacklistData)
+  const availableCurrencies =
+    R.path(['cryptoCurrencies'])(blacklistResponse) ?? []
+
+  const [clickedItem, setClickedItem] = useState(
+    R.path([0, 'code'], availableCurrencies)
+  )
+
+  useEffect(() => {
+    setClickedItem(R.path([0, 'code'], availableCurrencies))
+  }, [availableCurrencies])
+
+  const onClickSidebarItem = e => {
+    setClickedItem(e.code)
+  }
+
+  const isSelected = it => {
+    return clickedItem === it.code
+  }
 
   return (
-    <div>
-      <h1>Hello from Blacklist</h1>
-      <DataTable elements={elements} />
-    </div>
+    <>
+      <TitleSection title="Blacklist" />
+      <Grid container className={classes.grid}>
+        <Sidebar
+          data={availableCurrencies}
+          isSelected={isSelected}
+          displayName={it => it.code}
+          onClick={onClickSidebarItem}
+        />
+        <div className={classes.content}>
+          <BlacklistTable data={formattedData} selectedCoin={clickedItem} />
+        </div>
+      </Grid>
+    </>
   )
 }
 
