@@ -55,7 +55,7 @@ const Blacklist = () => {
 
   return (
     <>
-      <TitleSection title="Blacklist" />
+      <TitleSection title="Blacklisted addresses" />
       <Grid container className={classes.grid}>
         <Sidebar
           data={availableCurrencies}
