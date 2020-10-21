@@ -9,7 +9,7 @@ import Modal from 'src/components/Modal'
 import { Link } from 'src/components/buttons'
 import Sidebar from 'src/components/layout/Sidebar'
 import TitleSection from 'src/components/layout/TitleSection'
-// import { P } from 'src/components/typography'
+// import { Info3 } from 'src/components/typography'
 
 import styles from './Blacklist.styles'
 import BlacklistTable from './BlacklistTable'
@@ -46,6 +46,27 @@ const GET_INFO = gql`
     config
   }
 `
+const modalTitleStyle = {
+  lineHeight: '120%',
+  color: '#1b2559',
+  fontSize: 14,
+  fontFamily: 'Mont',
+  fontWeight: 900
+}
+
+const inputLabelStyle = {
+  width: ' 632px',
+  height: '16px',
+  fontFamily: 'MuseoSans',
+  fontSize: '12px',
+  fontWeight: 900,
+  fontStretch: 'normal',
+  fontStyle: 'normal',
+  lineHeight: 1.33,
+  letterSpacing: 'normal',
+  color: '#1b2559',
+  marginTop: '25px'
+}
 
 const Blacklist = () => {
   const { data: blacklistResponse } = useQuery(GET_BLACKLIST)
@@ -113,9 +134,19 @@ const Blacklist = () => {
       </Grid>
       {showModal && (
         <Modal
+          width={676}
+          height={200}
           handleClose={toggleModal}
           open={true}
-          title="New compliance trigger"></Modal>
+          title={
+            <div style={modalTitleStyle}>{`Blacklist ${R.toLower(
+              clickedItem.display
+            )} address`}</div>
+          }>
+          <div style={inputLabelStyle}>
+            {'Paste new address to blacklist here'}
+          </div>
+        </Modal>
       )}
     </>
   )
