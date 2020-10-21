@@ -41,19 +41,24 @@ const BlacklistTable = ({
     {
       name: 'address',
       header: <Label1 style={{ color: 'white' }}>{'Addresses'}</Label1>,
-      width: 600,
+      width: 800,
       textAlign: 'left',
       size: 'sm',
-      view: it => <CopyToClipboard>{R.path(['address'], it)}</CopyToClipboard>
+      view: it => (
+        <div style={{ marginLeft: '8px' }}>
+          <CopyToClipboard>{R.path(['address'], it)}</CopyToClipboard>
+        </div>
+      )
     },
     {
       name: 'deleteButton',
       header: <Label1 style={{ color: 'white' }}>{'Delete'}</Label1>,
-      width: 100,
+      width: 130,
       textAlign: 'center',
       size: 'sm',
       view: it => (
         <IconButton
+          style={{ paddingLeft: '13px' }}
           onClick={() =>
             onDelete(R.path(['cryptoCode'], it), R.path(['address'], it))
           }>
