@@ -20,8 +20,7 @@ const BlackListModal = ({ showModal, toggleModal, selectedCoin }) => {
     setAddressField(event.target.value)
   }
 
-  const handleAddToBlacklist = e => {
-    console.log(e)
+  const handleAddToBlacklist = () => {
     console.log(addressField)
   }
 
@@ -29,6 +28,7 @@ const BlackListModal = ({ showModal, toggleModal, selectedCoin }) => {
     <>
       {showModal && (
         <Modal
+          closeOnBackdropClick={true}
           width={676}
           height={200}
           handleClose={toggleModal}
