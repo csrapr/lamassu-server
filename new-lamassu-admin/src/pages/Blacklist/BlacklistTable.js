@@ -65,6 +65,7 @@ const BlacklistTable = ({
   const dataToShow = selectedCoin
     ? data[selectedCoin.code]
     : data[R.keys(data)[0]]
+
   return (
     <>
       <H4 style={headingStyles}>
