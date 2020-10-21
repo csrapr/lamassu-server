@@ -5,12 +5,14 @@ import gql from 'graphql-tag'
 import * as R from 'ramda'
 import React, { useState, useEffect } from 'react'
 
+import Modal from 'src/components/Modal'
+import { Link } from 'src/components/buttons'
 import Sidebar from 'src/components/layout/Sidebar'
-import { H1 } from 'src/components/typography'
+import TitleSection from 'src/components/layout/TitleSection'
+// import { P } from 'src/components/typography'
 
 import styles from './Blacklist.styles'
 import BlacklistTable from './BlacklistTable'
-// import { useHistory } from 'react-router-dom'
 
 const useStyles = makeStyles(styles)
 
@@ -33,8 +35,21 @@ const GET_BLACKLIST = gql`
   }
 `
 
+const SAVE_CONFIG = gql`
+  mutation Save($config: JSONObject) {
+    saveConfig(config: $config)
+  }
+`
+
+const GET_INFO = gql`
+  query getData {
+    config
+  }
+`
+
 const Blacklist = () => {
   const { data: blacklistResponse } = useQuery(GET_BLACKLIST)
+  const { data: configData } = useQuery(GET_INFO)
   const classes = useStyles()
   const blacklistData = R.path(['blacklist'])(blacklistResponse) ?? []
   const groupByCode = R.groupBy(obj => obj.cryptoCode)
@@ -42,16 +57,18 @@ const Blacklist = () => {
   const availableCurrencies =
     R.path(['cryptoCurrencies'], blacklistResponse) ?? []
 
-  const [clickedItem, setClickedItem] = useState(
-    R.path([0, 'code'], availableCurrencies)
-  )
+  const [clickedItem, setClickedItem] = useState({})
+  const [showModal, setShowModal] = useState(false)
 
   useEffect(() => {
-    setClickedItem(R.path([0, 'code'], availableCurrencies))
+    setClickedItem({
+      code: R.path([0, 'code'], availableCurrencies),
+      display: R.path([0, 'display'], availableCurrencies)
+    })
   }, [availableCurrencies])
 
   const onClickSidebarItem = e => {
-    setClickedItem(e.code)
+    setClickedItem({ code: e.code, display: e.display })
   }
 
   const [deleteEntry] = useMutation(DELETE_ROW, {
@@ -60,13 +77,23 @@ const Blacklist = () => {
     refetchQueries: () => ['getBlacklistData']
   })
 
+  const [saveConfig] = useMutation(SAVE_CONFIG, {
+    refetchQueries: () => ['getData']
+  })
+
   const isSelected = it => {
-    return clickedItem === it.code
+    return clickedItem.code === it.code
+  }
+
+  const toggleModal = () => {
+    setShowModal(!showModal)
   }
 
   return (
     <>
-      <H1>{'Blacklisted addresses'}</H1>
+      <TitleSection title="Blacklisted addresses">
+        <Link onClick={toggleModal}>Blacklist new addresses</Link>
+      </TitleSection>
       <Grid container className={classes.grid}>
         <Sidebar
           data={availableCurrencies}
@@ -79,9 +106,17 @@ const Blacklist = () => {
             data={formattedData}
             selectedCoin={clickedItem}
             deleteEntry={deleteEntry}
+            saveConfig={saveConfig}
+            configData={configData}
           />
         </div>
       </Grid>
+      {showModal && (
+        <Modal
+          handleClose={toggleModal}
+          open={true}
+          title="New compliance trigger"></Modal>
+      )}
     </>
   )
 }
