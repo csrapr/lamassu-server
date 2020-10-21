@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import Grid from '@material-ui/core/Grid'
 import { makeStyles } from '@material-ui/core/styles'
 import gql from 'graphql-tag'
@@ -14,10 +14,15 @@ import BlacklistTable from './BlacklistTable'
 
 const useStyles = makeStyles(styles)
 
+const DELETE_ROW = gql`
+  mutation DeleteBlacklistRow($cryptoCode: String, $address: String) {
+    deleteBlacklistRow(cryptoCode: $cryptoCode, address: $address)
+  }
+`
+
 const GET_BLACKLIST = gql`
-  {
+  query getBlacklistData {
     blacklist {
-      createdByOperator
       cryptoCode
       address
     }
@@ -49,6 +54,12 @@ const Blacklist = () => {
     setClickedItem(e.code)
   }
 
+  const [deleteEntry] = useMutation(DELETE_ROW, {
+    onCompleted: () => console.log('deleted row! TODO'),
+    onError: () => console.error('Error while deleting row'),
+    refetchQueries: () => ['getBlacklistData']
+  })
+
   const isSelected = it => {
     return clickedItem === it.code
   }
@@ -64,7 +75,11 @@ const Blacklist = () => {
           onClick={onClickSidebarItem}
         />
         <div className={classes.content}>
-          <BlacklistTable data={formattedData} selectedCoin={clickedItem} />
+          <BlacklistTable
+            data={formattedData}
+            selectedCoin={clickedItem}
+            deleteEntry={deleteEntry}
+          />
         </div>
       </Grid>
     </>

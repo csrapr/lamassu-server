@@ -1,49 +1,48 @@
 import * as R from 'ramda'
 import React from 'react'
 
+import { IconButton } from 'src/components/buttons'
 import TitleSection from 'src/components/layout/TitleSection'
 import DataTable from 'src/components/tables/DataTable'
 import CopyToClipboard from 'src/pages/Transactions/CopyToClipboard'
-import { formatCryptoAddress } from 'src/utils/coin'
+import { ReactComponent as DeleteIcon } from 'src/styling/icons/action/delete/enabled.svg'
 
-const formatAddress = (cryptoCode = '', address = '') =>
-  formatCryptoAddress(cryptoCode, address).replace(/(.{5})/g, '$1 ')
+const BlacklistTable = ({ data, selectedCoin, deleteEntry }) => {
+  const onDelete = (cryptoCode, address) => {
+    deleteEntry({ variables: { cryptoCode, address } })
+  }
 
-const BlacklistTable = ({ data, selectedCoin }) => {
   const elements = [
     {
-      header: 'Cryptocode',
-      width: 180,
-      textAlign: 'center',
+      name: 'address',
+      header: 'Addresses',
+      width: 600,
+      textAlign: 'left',
       size: 'sm',
-      view: R.path(['cryptoCode'])
+      view: it => <CopyToClipboard>{R.path(['address'], it)}</CopyToClipboard>
     },
     {
-      header: 'Addresses',
-      width: 380,
+      name: 'deleteButton',
+      header: 'Delete',
+      width: 100,
       textAlign: 'center',
       size: 'sm',
       view: it => (
-        <CopyToClipboard>
-          {formatAddress(R.path(['cryptoCode'])(it), R.path(['address'])(it))}
-        </CopyToClipboard>
+        <IconButton
+          onClick={() =>
+            onDelete(R.path(['cryptoCode'], it), R.path(['address'], it))
+          }>
+          <DeleteIcon />
+        </IconButton>
       )
-    },
-    {
-      header: 'Created by Operator',
-      width: 180,
-      textAlign: 'center',
-      size: 'sm',
-      view: it => (it.createdByOperator ? 'Yes' : 'No')
     }
   ]
 
   const dataToShow = selectedCoin ? data[selectedCoin] : data[R.keys(data)[0]]
-
   return (
     <>
       <TitleSection title={`${selectedCoin} blacklisted addresses`} />
-      <DataTable elements={elements} data={dataToShow} />
+      <DataTable data={dataToShow} elements={elements} name="blacklistTable" />
     </>
   )
 }
