@@ -6,7 +6,7 @@ import * as R from 'ramda'
 import React, { useState, useEffect } from 'react'
 
 import Sidebar from 'src/components/layout/Sidebar'
-import TitleSection from 'src/components/layout/TitleSection'
+import { H1 } from 'src/components/typography'
 
 import styles from './Blacklist.styles'
 import BlacklistTable from './BlacklistTable'
@@ -27,6 +27,7 @@ const GET_BLACKLIST = gql`
       address
     }
     cryptoCurrencies {
+      display
       code
     }
   }
@@ -36,11 +37,10 @@ const Blacklist = () => {
   const { data: blacklistResponse } = useQuery(GET_BLACKLIST)
   const classes = useStyles()
   const blacklistData = R.path(['blacklist'])(blacklistResponse) ?? []
-
   const groupByCode = R.groupBy(obj => obj.cryptoCode)
   const formattedData = groupByCode(blacklistData)
   const availableCurrencies =
-    R.path(['cryptoCurrencies'])(blacklistResponse) ?? []
+    R.path(['cryptoCurrencies'], blacklistResponse) ?? []
 
   const [clickedItem, setClickedItem] = useState(
     R.path([0, 'code'], availableCurrencies)
@@ -66,12 +66,12 @@ const Blacklist = () => {
 
   return (
     <>
-      <TitleSection title="Blacklisted addresses" />
+      <H1>{'Blacklisted addresses'}</H1>
       <Grid container className={classes.grid}>
         <Sidebar
           data={availableCurrencies}
           isSelected={isSelected}
-          displayName={it => it.code}
+          displayName={it => it.display}
           onClick={onClickSidebarItem}
         />
         <div className={classes.content}>
