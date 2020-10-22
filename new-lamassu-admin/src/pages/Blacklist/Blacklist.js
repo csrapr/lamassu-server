@@ -3,7 +3,7 @@ import Grid from '@material-ui/core/Grid'
 import { makeStyles } from '@material-ui/core/styles'
 import gql from 'graphql-tag'
 import * as R from 'ramda'
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 
 import { Link } from 'src/components/buttons'
 import Sidebar from 'src/components/layout/Sidebar'
@@ -58,24 +58,20 @@ const ADD_ROW = gql`
 const Blacklist = () => {
   const { data: blacklistResponse } = useQuery(GET_BLACKLIST)
   const { data: configData } = useQuery(GET_INFO)
-  const classes = useStyles()
   const blacklistData = R.path(['blacklist'])(blacklistResponse) ?? []
-  const groupByCode = R.groupBy(obj => obj.cryptoCode)
-  // const formattedData = groupByCode(blacklistData)
   const availableCurrencies =
     R.path(['cryptoCurrencies'], blacklistResponse) ?? []
 
-  const [clickedItem, setClickedItem] = useState({})
-  const [showModal, setShowModal] = useState(false)
-  const [formattedData, setFormattedData] = useState({})
+  const classes = useStyles()
 
-  useEffect(() => {
-    setClickedItem({
-      code: R.path([0, 'code'], availableCurrencies),
-      display: R.path([0, 'display'], availableCurrencies)
-    })
-    setFormattedData(groupByCode(blacklistData))
-  }, [availableCurrencies, blacklistData, groupByCode])
+  const [showModal, setShowModal] = useState(false)
+  const [clickedItem, setClickedItem] = useState({
+    code: 'BTC',
+    display: 'Bitcoin'
+  })
+
+  const groupByCode = R.groupBy(obj => obj.cryptoCode)
+  const formattedData = groupByCode(blacklistData)
 
   const onClickSidebarItem = e => {
     setClickedItem({ code: e.code, display: e.display })
@@ -87,13 +83,6 @@ const Blacklist = () => {
   })
 
   const handleDeleteEntry = (cryptoCode, address) => {
-    // I did this function to make the visual change in the interface instant, makes the website feel more fluid
-    setFormattedData({
-      ...formattedData,
-      [cryptoCode]: R.filter(R.compose(R.not, R.propEq('address', address)))(
-        R.path([cryptoCode], formattedData)
-      )
-    })
     deleteEntry({ variables: { cryptoCode, address } })
   }
 
