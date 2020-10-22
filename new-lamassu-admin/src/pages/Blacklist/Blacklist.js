@@ -8,7 +8,6 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'src/components/buttons'
 import Sidebar from 'src/components/layout/Sidebar'
 import TitleSection from 'src/components/layout/TitleSection'
-// import { Info3 } from 'src/components/typography'
 
 import styles from './Blacklist.styles'
 import BlackListModal from './BlacklistModal'
