@@ -61,19 +61,21 @@ const Blacklist = () => {
   const classes = useStyles()
   const blacklistData = R.path(['blacklist'])(blacklistResponse) ?? []
   const groupByCode = R.groupBy(obj => obj.cryptoCode)
-  const formattedData = groupByCode(blacklistData)
+  // const formattedData = groupByCode(blacklistData)
   const availableCurrencies =
     R.path(['cryptoCurrencies'], blacklistResponse) ?? []
 
   const [clickedItem, setClickedItem] = useState({})
   const [showModal, setShowModal] = useState(false)
+  const [formattedData, setFormattedData] = useState({})
 
   useEffect(() => {
     setClickedItem({
       code: R.path([0, 'code'], availableCurrencies),
       display: R.path([0, 'display'], availableCurrencies)
     })
-  }, [availableCurrencies])
+    setFormattedData(groupByCode(blacklistData))
+  }, [availableCurrencies, blacklistData, groupByCode])
 
   const onClickSidebarItem = e => {
     setClickedItem({ code: e.code, display: e.display })
@@ -83,6 +85,17 @@ const Blacklist = () => {
     onError: () => console.error('Error while deleting row'),
     refetchQueries: () => ['getBlacklistData']
   })
+
+  const handleDeleteEntry = (cryptoCode, address) => {
+    // I did this function to make the visual change in the interface instant, makes the website feel more fluid
+    setFormattedData({
+      ...formattedData,
+      [cryptoCode]: R.filter(R.compose(R.not, R.propEq('address', address)))(
+        R.path([cryptoCode], formattedData)
+      )
+    })
+    deleteEntry({ variables: { cryptoCode, address } })
+  }
 
   const [addEntry] = useMutation(ADD_ROW, {
     onError: () => console.error('Error while adding row'),
@@ -121,7 +134,7 @@ const Blacklist = () => {
           <BlacklistTable
             data={formattedData}
             selectedCoin={clickedItem}
-            deleteEntry={deleteEntry}
+            handleDeleteEntry={handleDeleteEntry}
             saveConfig={saveConfig}
             configData={configData}
           />

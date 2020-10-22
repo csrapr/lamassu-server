@@ -18,14 +18,10 @@ const useStyles = makeStyles(styles)
 const BlacklistTable = ({
   data,
   selectedCoin,
-  deleteEntry,
+  handleDeleteEntry,
   saveConfig,
   configData
 }) => {
-  const onDelete = (cryptoCode, address) => {
-    deleteEntry({ variables: { cryptoCode, address } })
-  }
-
   const complianceConfig =
     configData?.config && fromNamespace('compliance')(configData.config)
   const rejectAddressReuse = complianceConfig?.rejectAddressReuse ?? false
@@ -59,7 +55,10 @@ const BlacklistTable = ({
         <IconButton
           className={classes.deleteButton}
           onClick={() =>
-            onDelete(R.path(['cryptoCode'], it), R.path(['address'], it))
+            handleDeleteEntry(
+              R.path(['cryptoCode'], it),
+              R.path(['address'], it)
+            )
           }>
           <DeleteIcon />
         </IconButton>
