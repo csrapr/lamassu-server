@@ -4,6 +4,8 @@ export default {
     height: '100%'
   },
   content: {
+    display: 'flex',
+    flexDirection: 'column',
     flex: 1,
     marginLeft: 48
   },
@@ -33,5 +35,8 @@ export default {
   },
   addressRow: {
     marginLeft: '8px'
+  },
+  table: {
+    height: '900px'
   }
 }

@@ -9,7 +9,12 @@ import { TextInput } from 'src/components/inputs'
 import styles from './Blacklist.styles'
 const useStyles = makeStyles(styles)
 
-const BlackListModal = ({ showModal, toggleModal, selectedCoin }) => {
+const BlackListModal = ({
+  showModal,
+  toggleModal,
+  selectedCoin,
+  addToBlacklist
+}) => {
   const classes = useStyles()
 
   const [addressField, setAddressField] = useState('')
@@ -19,7 +24,10 @@ const BlackListModal = ({ showModal, toggleModal, selectedCoin }) => {
   }
 
   const handleAddToBlacklist = () => {
-    console.log(addressField)
+    if (addressField.trim() !== '') {
+      addToBlacklist(selectedCoin.code, addressField.trim())
+    }
+    setAddressField('')
   }
 
   const placeholderAddress = {

@@ -46,6 +46,15 @@ const GET_INFO = gql`
   }
 `
 
+const ADD_ROW = gql`
+  mutation InsertBlacklistRow($cryptoCode: String!, $address: String!) {
+    insertBlacklistRow(cryptoCode: $cryptoCode, address: $address) {
+      cryptoCode
+      address
+    }
+  }
+`
+
 const Blacklist = () => {
   const { data: blacklistResponse } = useQuery(GET_BLACKLIST)
   const { data: configData } = useQuery(GET_INFO)
@@ -71,8 +80,12 @@ const Blacklist = () => {
   }
 
   const [deleteEntry] = useMutation(DELETE_ROW, {
-    onCompleted: () => console.log('deleted row! TODO'),
     onError: () => console.error('Error while deleting row'),
+    refetchQueries: () => ['getBlacklistData']
+  })
+
+  const [addEntry] = useMutation(ADD_ROW, {
+    onError: () => console.error('Error while adding row'),
     refetchQueries: () => ['getBlacklistData']
   })
 
@@ -86,6 +99,10 @@ const Blacklist = () => {
 
   const toggleModal = () => {
     setShowModal(!showModal)
+  }
+
+  const addToBlacklist = (cryptoCode, address) => {
+    addEntry({ variables: { cryptoCode, address } })
   }
 
   return (
@@ -113,7 +130,8 @@ const Blacklist = () => {
       <BlackListModal
         showModal={showModal}
         toggleModal={toggleModal}
-        selectedCoin={clickedItem}></BlackListModal>
+        selectedCoin={clickedItem}
+        addToBlacklist={addToBlacklist}></BlackListModal>
     </>
   )
 }
