@@ -12,12 +12,13 @@ const bech32Opts = {
   testNetPrefix: 'tb'
 }
 
-const validate = (address, network = 'main') => {
-  // if (!network) throw new Error('No network supplied.')
-  // if (!address) throw new Error('No address supplied.')
-  if (base58Validator(network, address, base58Opts)) return true
-  if (bech32Validator(network, address, bech32Opts)) return true
+const validate = address => {
+  if (!address) throw new Error('No address supplied.')
+  if (base58Validator('main', address, base58Opts)) return true
+  if (bech32Validator('main', address, bech32Opts)) return true
+  if (base58Validator('test', address, base58Opts)) return true
+  if (bech32Validator('test', address, bech32Opts)) return true
   return false
 }
 
-module.exports = { validate }
+export default validate

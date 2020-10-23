@@ -12,10 +12,10 @@ const base58Opts = {
   ]
 }
 
-function validate(network, address) {
-  if (!network) throw new Error('No network supplied.')
+function validate(address) {
   if (!address) throw new Error('No address supplied.')
-  return base58Validator(network, address, base58Opts)
+  if (base58Validator('main', address, base58Opts)) return true
+  if (base58Validator('test', address, base58Opts)) return true
 }
 
 export default validate

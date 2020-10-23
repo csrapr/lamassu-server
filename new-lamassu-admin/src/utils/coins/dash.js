@@ -6,10 +6,10 @@ const base58Opts = {
   testNetPrefix: [[0x8c], [0x13]]
 }
 
-function validate(network, address) {
-  if (!network) throw new Error('No network supplied.')
+function validate(address) {
   if (!address) throw new Error('No address supplied.')
-  if (base58Validator(network, address, base58Opts)) return true
+  if (base58Validator('main', address, base58Opts)) return true
+  if (base58Validator('test', address, base58Opts)) return true
   return false
 }
 

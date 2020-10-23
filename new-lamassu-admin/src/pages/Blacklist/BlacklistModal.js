@@ -5,6 +5,7 @@ import React, { useState } from 'react'
 import Modal from 'src/components/Modal'
 import { Link } from 'src/components/buttons'
 import { TextInput } from 'src/components/inputs'
+import coinValidator from 'src/utils/coins/coinValidator'
 
 import styles from './Blacklist.styles'
 const useStyles = makeStyles(styles)
@@ -18,16 +19,32 @@ const BlackListModal = ({
   const classes = useStyles()
 
   const [addressField, setAddressField] = useState('')
+  const [invalidAddress, setInvalidAddress] = useState(false)
 
   const handleChange = event => {
+    if (event.target.value === '') {
+      setInvalidAddress(false)
+    }
     setAddressField(event.target.value)
   }
 
   const handleAddToBlacklist = () => {
-    if (addressField.trim() !== '') {
-      addToBlacklist(selectedCoin.code, addressField.trim())
+    if (addressField.trim() === '') {
+      setInvalidAddress(true)
+      return
     }
+    if (coinValidator[selectedCoin.code](addressField.trim())) {
+      addToBlacklist(selectedCoin.code, addressField.trim())
+      handleClose()
+    } else {
+      setInvalidAddress(true)
+    }
+  }
+
+  const handleClose = () => {
     setAddressField('')
+    setInvalidAddress(false)
+    toggleModal()
   }
 
   const placeholderAddress = {
@@ -39,6 +56,8 @@ const BlackListModal = ({
     BCH: 'qrd6za97wm03lfyg82w0c9vqgc727rhemg5yd9k3dm'
   }
 
+  coinValidator.BTC('HELLO?')
+
   return (
     <>
       {showModal && (
@@ -46,7 +65,7 @@ const BlackListModal = ({
           closeOnBackdropClick={true}
           width={676}
           height={200}
-          handleClose={toggleModal}
+          handleClose={handleClose}
           open={true}
           title={
             <div className={classes.modalTitle}>
@@ -56,6 +75,7 @@ const BlackListModal = ({
             </div>
           }>
           <TextInput
+            error={invalidAddress}
             label="Paste new address to blacklist here"
             name="address-to-block-input"
             autoFocus
