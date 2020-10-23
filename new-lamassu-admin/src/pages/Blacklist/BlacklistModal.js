@@ -29,15 +29,31 @@ const BlackListModal = ({
   }
 
   const handleAddToBlacklist = () => {
-    if (addressField.trim() === '') {
+    // textfield newline is a "\n"
+    const addressesToAdd = R.map(R.trim, addressField.split('\n'))
+    const badAddresses = []
+    // for each address in the new array...
+    addressesToAdd.forEach(address => {
+      // checks if address isnt just a bunch of spaces, and validates that address
+      if (
+        address.trim() !== '' &&
+        coinValidator[selectedCoin.code](address.trim())
+      ) {
+        // if valid, adds to blacklist
+        addToBlacklist(selectedCoin.code, address.trim())
+      } else if (address !== '') {
+        // if not valid and not "", adds to bad address list
+        badAddresses.push(address)
+      }
+    })
+    if (badAddresses.length > 0) {
+      // if 1 or more bad address in list, change textfield to red color
       setInvalidAddress(true)
-      return
-    }
-    if (coinValidator[selectedCoin.code](addressField.trim())) {
-      addToBlacklist(selectedCoin.code, addressField.trim())
-      handleClose()
+      // revert the split by "\n" operation, then set address field as having only the bad addresses
+      setAddressField(badAddresses.join('\n'))
     } else {
-      setInvalidAddress(true)
+      // close the modal if everything OK
+      handleClose()
     }
   }
 
@@ -75,6 +91,7 @@ const BlackListModal = ({
             </div>
           }>
           <TextInput
+            multiline
             error={invalidAddress}
             label="Paste new address to blacklist here"
             name="address-to-block-input"
