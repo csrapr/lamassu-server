@@ -55,17 +55,13 @@ const getStep = step => {
   }
 }
 
-const Wizard = ({ onClose, visible }) => {
+const Wizard = ({ onClose, visible, save }) => {
   const [{ step, config }, setState] = useState({
     step: 1
   })
   const classes = useStyles()
   const isLastStep = step === NUM_STEPS
   const stepOptions = getStep(step)
-
-  const save = config => {
-    console.log(config)
-  }
 
   const onContinue = async it => {
     const newConfig = R.merge(config, stepOptions.schema.cast(it))

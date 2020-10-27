@@ -76,14 +76,6 @@ const SelectToken = () => {
               autoComplete={'off'}
               className={classes.customTokenField}
               component={TextInput}
-              label="ETH contract address"
-              size="lg"
-              name="customToken.ethContractAddress"
-            />
-            <Field
-              autoComplete={'off'}
-              className={classes.customTokenField}
-              component={TextInput}
               label="Coin name"
               size="lg"
               name="customToken.coinName"
@@ -95,6 +87,14 @@ const SelectToken = () => {
               label="Ticker symbol"
               size="lg"
               name="customToken.tickerSymbol"
+            />
+            <Field
+              autoComplete={'off'}
+              className={classes.customTokenField}
+              component={TextInput}
+              label="ETH contract address"
+              size="lg"
+              name="customToken.contractAddress"
             />
           </>
         )}

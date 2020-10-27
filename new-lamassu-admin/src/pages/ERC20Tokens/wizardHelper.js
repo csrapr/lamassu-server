@@ -17,7 +17,7 @@ const step1 = {
   Component: SelectToken,
   initialValues: {
     tokenName: '',
-    customToken: { ethContractAddress: '', coinName: '', tickerSymbol: '' }
+    customToken: { coinName: '', tickerSymbol: '', contractAddress: '' }
   },
   schema: step1Schema
 }
