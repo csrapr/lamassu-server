@@ -1,5 +1,6 @@
 import { makeStyles } from '@material-ui/core'
 import { Form, Formik } from 'formik'
+import * as R from 'ramda'
 import React, { useState } from 'react'
 
 import Modal from 'src/components/Modal'
@@ -41,28 +42,44 @@ const getStep = step => {
   switch (step) {
     case 1:
       return step1
+    /* 
     case 2:
       return step1
     case 3:
       return step1
     case 4:
-      return step1
+      return step1 
+    */
     default:
       return React.Fragment
   }
 }
 
 const Wizard = ({ onClose, visible }) => {
-  const [step, setStep] = useState(1)
+  const [{ step, config }, setState] = useState({
+    step: 1
+  })
   const classes = useStyles()
   const isLastStep = step === NUM_STEPS
   const stepOptions = getStep(step)
-  const onContinue = () => {
-    if (isLastStep) {
-      return onClose()
-    }
-    setStep(step + 1)
+
+  const save = config => {
+    console.log(config)
   }
+
+  const onContinue = async it => {
+    const newConfig = R.merge(config, stepOptions.schema.cast(it))
+
+    if (isLastStep) {
+      return save(newConfig)
+    }
+
+    setState({
+      step: step + 1,
+      config: newConfig
+    })
+  }
+
   return (
     <>
       <Modal

@@ -178,7 +178,6 @@ const Wizard = ({ onClose, save, error, currency }) => {
 
   const onContinue = async it => {
     const newConfig = R.merge(config, stepOptions.schema.cast(it))
-
     if (isLastStep) {
       return save(newConfig)
     }
