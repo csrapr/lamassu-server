@@ -75,7 +75,7 @@ const ERC20Tokens = () => {
           data={R.path(['erc20tokens'], getTokensResponse)}
         />
       )}
-      {!loading && !R.isEmpty(getTokensResponse) && (
+      {!loading && R.isEmpty(getTokensResponse) && (
         <Box display="flex" alignItems="center" flexDirection="column" mt={15}>
           <Info3>
             It seems there are no active compliance triggers on your network

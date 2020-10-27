@@ -40,19 +40,15 @@ const TokensTable = ({ data, handleDeleteEntry }) => {
       header: (
         <Label1 className={classes.white}>{'ETH Contract Address'}</Label1>
       ),
-      width: 500,
+      width: 600,
       textAlign: 'left',
       size: 'sm',
-      view: it => (
-        <div className={classes.addressRow}>
-          {R.path(['contractAddress'], it)}
-        </div>
-      )
+      view: it => <div>{R.path(['contractAddress'], it)}</div>
     },
     {
       name: 'deleteButton',
       header: <Label1 className={classes.white}>{'Delete'}</Label1>,
-      width: 130,
+      width: 100,
       textAlign: 'center',
       size: 'sm',
       view: it => (

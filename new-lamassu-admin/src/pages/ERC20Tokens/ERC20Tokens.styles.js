@@ -32,8 +32,5 @@ export default {
   },
   deleteButton: {
     paddingLeft: 13
-  },
-  addressRow: {
-    marginLeft: 8
   }
 }

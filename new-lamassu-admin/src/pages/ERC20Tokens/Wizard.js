@@ -67,6 +67,7 @@ const Wizard = ({ onClose, visible, save }) => {
     const newConfig = R.merge(config, stepOptions.schema.cast(it))
 
     if (isLastStep) {
+      onClose()
       return save(newConfig)
     }
 
