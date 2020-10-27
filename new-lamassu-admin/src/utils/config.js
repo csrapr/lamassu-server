@@ -3,6 +3,7 @@ import * as R from 'ramda'
 const namespaces = {
   CASH_OUT: 'cashOut',
   WALLETS: 'wallets',
+  ERC20_TOKENS: 'erc20Tokens',
   OPERATOR_INFO: 'operatorInfo',
   NOTIFICATIONS: 'notifications',
   LOCALE: 'locale',

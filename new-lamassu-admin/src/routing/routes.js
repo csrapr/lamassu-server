@@ -13,6 +13,7 @@ import AuthRegister from 'src/pages/AuthRegister'
 import Cashout from 'src/pages/Cashout'
 import Commissions from 'src/pages/Commissions'
 import { Customers, CustomerProfile } from 'src/pages/Customers'
+import ERC20Tokens from 'src/pages/ERC20Tokens'
 import Funding from 'src/pages/Funding'
 import Locales from 'src/pages/Locales'
 import MachineLogs from 'src/pages/MachineLogs'
@@ -118,6 +119,12 @@ const tree = [
         label: 'Wallet',
         route: '/settings/wallet-settings',
         component: WalletSettings
+      },
+      {
+        key: namespaces.ERC20_TOKENS,
+        label: 'ERC-20 Tokens',
+        route: '/settings/erc-20-tokens',
+        component: ERC20Tokens
       },
       {
         key: namespaces.OPERATOR_INFO,
