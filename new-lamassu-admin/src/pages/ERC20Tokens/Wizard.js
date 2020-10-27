@@ -8,7 +8,7 @@ import { Button } from 'src/components/buttons'
 import { comet } from 'src/styling/variables'
 
 import { step1 } from './wizardHelper'
-const NUM_STEPS = 4
+const NUM_STEPS = 1
 
 const styles = {
   stepper: {
