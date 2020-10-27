@@ -1,11 +1,17 @@
 import { Box } from '@material-ui/core'
-import React from 'react'
+import React, { useState } from 'react'
 
 import { Button } from 'src/components/buttons'
 import Link from 'src/components/buttons/Link'
 import TitleSection from 'src/components/layout/TitleSection'
 import { Info3, Label3 } from 'src/components/typography'
+
+import Wizard from './Wizard'
+
 const ERC20Tokens = () => {
+  const [showWizard, setShowWizard] = useState(true)
+  const toggleShowWizard = () => setShowWizard(!showWizard)
+
   return (
     <>
       <TitleSection title="Hello from ERC Tokens page" />
@@ -20,11 +26,10 @@ const ERC20Tokens = () => {
           </a>{' '}
           on ERC-20 coin addition before adding one.
         </Label3>
-        <Button
-          onClick={() => console.log('Clicked button')}
-          style={{ marginTop: 65 }}>
+        <Button onClick={() => setShowWizard(true)} style={{ marginTop: 65 }}>
           Add first token
         </Button>
+        <Wizard visible={showWizard} onClose={toggleShowWizard}></Wizard>
       </Box>
     </>
   )
