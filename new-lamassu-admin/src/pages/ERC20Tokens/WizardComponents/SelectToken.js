@@ -48,7 +48,6 @@ const SelectToken = () => {
 
   const isCustomTokenEnabled = containsType(['setupNew'])
 
-  console.log(values)
   return (
     <>
       <Box display="flex" alignItems="center">
