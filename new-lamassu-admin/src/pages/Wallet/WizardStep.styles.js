@@ -1,4 +1,4 @@
-import { errorColor } from 'src/styling/variables'
+import { errorColor, spacer } from 'src/styling/variables'
 
 const LABEL_WIDTH = 150
 
@@ -38,5 +38,8 @@ export default {
   },
   picker: {
     width: LABEL_WIDTH
+  },
+  margintop10: {
+    marginTop: 10 * spacer
   }
 }

@@ -1,4 +1,5 @@
 import { useQuery, useMutation } from '@apollo/react-hooks'
+import { makeStyles } from '@material-ui/core'
 import gql from 'graphql-tag'
 import * as R from 'ramda'
 import React, { useState } from 'react'
@@ -11,7 +12,11 @@ import schemas from 'src/pages/Services/schemas'
 import { fromNamespace, toNamespace } from 'src/utils/config'
 
 import Wizard from './Wizard'
+import styles from './WizardStep.styles'
+import { tokens, tokenElements } from './erc20tokens'
 import { WalletSchema, getElements } from './helper'
+
+const useStyles = makeStyles(styles)
 
 const SAVE_CONFIG = gql`
   mutation Save($config: JSONObject, $accounts: JSONObject) {
@@ -44,6 +49,7 @@ const GET_INFO = gql`
 `
 
 const Wallet = ({ name: SCREEN_KEY }) => {
+  const classes = useStyles()
   const [editingSchema, setEditingSchema] = useState(null)
   const [wizard, setWizard] = useState(false)
   const [error, setError] = useState(false)
@@ -76,12 +82,14 @@ const Wallet = ({ name: SCREEN_KEY }) => {
 
     if (!accounts[it]) return setEditingSchema(schemas[it])
   }
+  console.log(
+    getElements(cryptoCurrencies, accountsConfig, enableThirdPartyService)
+  )
 
   const shouldOverrideEdit = it => {
     const namespaced = fromNamespace(it)(config)
     return !WalletSchema.isValidSync(namespaced)
   }
-
   return (
     <>
       <TitleSection title="Wallet Settings" error={error} />
@@ -101,6 +109,15 @@ const Wallet = ({ name: SCREEN_KEY }) => {
           accountsConfig,
           enableThirdPartyService
         )}
+      />
+      <div className={classes.margintop10} />
+      <EditableTable
+        enableEdit
+        stripeWhen={() => true}
+        name="erc20tokens"
+        namespaces={R.map(R.path(['code']))(tokens)}
+        data={tokens}
+        elements={tokenElements}
       />
       {wizard && (
         <Wizard
