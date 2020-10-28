@@ -41,12 +41,22 @@ const ADD_ROW = gql`
   }
 `
 
+// TODO
+/* const DELETE_ROW = gql`
+  mutation DeleteERC20Token($id: String!) {
+    deleteERC20Token(id: $id) {
+      coinName
+      tickerSymbol
+      contractAddress
+    }
+  }
+` */
+
 const ERC20Tokens = () => {
   const { data: getTokensResponse, loading } = useQuery(GET_TOKENS)
   const [showWizard, setShowWizard] = useState(false)
   const toggleShowWizard = () => setShowWizard(!showWizard)
 
-  /*eslint-disable*/
   const [addEntry] = useMutation(ADD_ROW, {
     onError: () => console.error('Error while adding row'),
     refetchQueries: () => ['getERC20Tokens']
