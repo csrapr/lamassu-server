@@ -90,6 +90,8 @@ const Wallet = ({ name: SCREEN_KEY }) => {
     const namespaced = fromNamespace(it)(config)
     return !WalletSchema.isValidSync(namespaced)
   }
+
+  console.log(data?.config && fromNamespace(SCREEN_KEY)(data.config))
   return (
     <>
       <TitleSection title="Wallet Settings" error={error} />
@@ -97,7 +99,10 @@ const Wallet = ({ name: SCREEN_KEY }) => {
         name="test"
         namespaces={R.map(R.path(['code']))(cryptoCurrencies)}
         data={config}
-        stripeWhen={it => !WalletSchema.isValidSync(it)}
+        stripeWhen={it => {
+          console.log(it)
+          return !WalletSchema.isValidSync(it)
+        }}
         enableEdit
         shouldOverrideEdit={shouldOverrideEdit}
         editOverride={setWizard}

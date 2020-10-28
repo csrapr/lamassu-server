@@ -1,4 +1,10 @@
 import * as R from 'ramda'
+import * as Yup from 'yup'
+
+// TODO
+const tokenSchema = Yup.object().shape({
+  exchange: Yup.string().required('Required')
+})
 
 const tokens = [
   {
@@ -49,4 +55,4 @@ const tokenElements = [
   }
 ]
 
-export { tokens, tokenElements }
+export { tokens, tokenElements, tokenSchema }
